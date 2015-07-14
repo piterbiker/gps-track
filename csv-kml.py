@@ -17,6 +17,9 @@ from myspatial import kml_koniec
 droid = android.Android()
 
 def show_dir(path):
+    '''
+    show content of directory
+    '''
     nodes = []
     for file in os.listdir(path):
         if file.endswith(".csv"):
@@ -35,6 +38,7 @@ def show_dir(path):
     target = nodes[result['item']]
     target_path = os.path.join(path, target)
     return target_path
+
 
 folder = (kat + podkat)
 plikod = show_dir(folder)

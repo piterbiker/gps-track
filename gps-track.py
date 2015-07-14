@@ -14,12 +14,12 @@ def drzwi(glowa, krotka):
     return nika
 
 teraz = str(datetime.date.today())
-nameofile = droid.dialogGetInput('Nazwa pliku', 'podaj nazwe pliku txt:').result
+nameofile = droid.dialogGetInput('Filename', 'Enter txt filename:').result
 
 plikzap = (kat + podkat + nameofile + '.csv')
 plikpom = (kat + nameofile + '.txt')
 	
-wybor = drzwi('Zapis pliku:', ["dodawanie", "nadpisywanie"])
+wybor = drzwi('Write mode:', ["append", "overwrite"])
 if wybor == 1:
     openzap = open(plikzap, 'w')
     openzap.write('')
@@ -29,7 +29,7 @@ if wybor == 1:
     openpom.write('')
     openpom.close()
 
-wybor2 = drzwi('Tryb zapisu:', ["spacer", "bieg", "rower", "pomiary"])
+wybor2 = drzwi('Record mode:', ["walk", "run", "bike", "measure"])
 if wybor2 == 0:
     tryb = 8
 elif wybor2 == 1:
@@ -39,7 +39,7 @@ elif wybor2 == 2:
 elif wybor2 == 3:
     tryb = 2
 
-wybor3 = drzwi('Pelne dane CSV:', ["NIE", "TAK"])
+wybor3 = drzwi('Full CSV data:', ["NO", "YES"])
 
 droid.startLocating(2000, 3)
 
@@ -51,8 +51,8 @@ while True:
             lon = str(locat.result['gps']['longitude'])
             wysoko = str(locat.result['gps']['altitude'])
         except Exception as p:
-            print ('niepowodzenie: ', p)
-            sygnal = 'BRAK'
+            print ('Failure: ', p)
+            sygnal = 'NONE'
         else:
             last = str(lat)[:9]
             lost = str(lon)[:9]
@@ -61,7 +61,8 @@ while True:
             znacznik = str(znaczn.strftime('%Y-%m-%d %H:%M:%S'))
             sygnal = 'GPS'
 
-# zapis pliku: czas,szerokosc,dlugosc,wysokosc,sygnal\n
+            # writing text file with attributes:
+            # time,latitude,longitude,height(HAGL),source of signal\n
             if wybor3 == 1:
                 openzap = open(plikzap, 'a')
                 openzap.write(znacznik + ',' + last + ',' + lost + ',' + sygnal + ',' + wysokost + ',\n')
@@ -78,7 +79,7 @@ while True:
             print(dlug)
             print(40 * '-')
     else:
-        print ("Czekam na WL. modulu GPS...") 
+        print ("Waiting for turn on GPS module...") 
     
     time.sleep(tryb)
     
