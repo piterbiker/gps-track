@@ -1,6 +1,6 @@
-# ------------------------------
-# config file with path to file
-# ------------------------------
+# --------------------------------
+# config file with program's paths
+# --------------------------------
 
 # main path to data file
 kat = 'D:\\'
