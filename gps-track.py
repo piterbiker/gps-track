@@ -1,4 +1,4 @@
-﻿import android
+import android
 import os, datetime, time
 
 from katalogi import kat
@@ -16,8 +16,9 @@ def mainMenu(topic, methodList):
     nika=droid.dialogGetResponse().result["item"]
     return nika
 
-teraz = str(datetime.date.today())
-nameofile = droid.dialogGetInput('Filename', 'Enter txt filename:').result
+teraz = datetime.date.today()
+terazProp = str(teraz.strftime('%y%m%d_'))
+nameofile = droid.dialogGetInput('Filename', 'Enter txt filename:', terazProp).result
 
 plikzap = '{}{}{}.csv'.format(kat, podkat, nameofile)
 plikpom = '{}{}.txt'.format(kat, nameofile)
@@ -54,7 +55,7 @@ droid.startLocating(2000, 3)
 
 lastOld = 0
 lostOld = 0
-zapis = 0
+zapis = None
 
 while True:
     locat = droid.readLocation()
@@ -95,7 +96,6 @@ while True:
             else:
                 zapis = 'N'
                 
-        finally:
             szer = '{} N [{}]'.format(last , sygnal)
             dlug = '{} E | {} [mnpm] ({})'.format(lost, wysokost, zapis)
 
@@ -108,5 +108,3 @@ while True:
     time.sleep(tryb)
     
 droid.stopLocating()
-
-
