@@ -43,6 +43,9 @@ wybor3 = drzwi('Full CSV data:', ["NO", "YES"])
 
 droid.startLocating(2000, 3)
 
+lastOld = 0
+lostOld = 0
+
 while True:
     locat = droid.readLocation()
     if 'gps' in droid.readLocation().result:
@@ -56,21 +59,27 @@ while True:
         else:
             last = str(lat)[:9]
             lost = str(lon)[:9]
-            wysokost = str(wysoko)[:4]
-            znaczn = datetime.datetime.now()
-            znacznik = str(znaczn.strftime('%Y-%m-%d %H:%M:%S'))
-            sygnal = 'GPS'
 
-            # writing text file with attributes:
-            # time,latitude,longitude,height(HAGL),source of signal\n
-            if wybor3 == 1:
-                openzap = open(plikzap, 'a')
-                openzap.write(znacznik + ',' + last + ',' + lost + ',' + sygnal + ',' + wysokost + ',\n')
-                openzap.close()
+            if (last != lastOld and lost != lostOld):
+                wysokost = str(wysoko)[:4]
+                znaczn = datetime.datetime.now()
+                znacznik = str(znaczn.strftime('%Y-%m-%d %H:%M:%S'))
+                sygnal = 'GPS'
 
-            openpom = open(plikpom, 'a')
-            openpom.write(lost + ' ' + last + ',')
-            openpom.close()        
+                # writing text file with attributes:
+                # time,latitude,longitude,height(HAGL),source of signal\n
+                if wybor3 == 1:
+                    openzap = open(plikzap, 'a')
+                    openzap.write(znacznik + ',' + last + ',' + lost + ',' + sygnal + ',' + wysokost + ',\n')
+                    openzap.close()
+
+                openpom = open(plikpom, 'a')
+                openpom.write(lost + ' ' + last + ',')
+                openpom.close()
+
+                lastOld = last
+                lostOld = lost
+                
         finally:
             szer = (last + ' N [' + sygnal + ']')
             dlug = (lost + ' E | ' + wysokost + '  [mnpm]')
@@ -84,3 +93,4 @@ while True:
     time.sleep(tryb)
     
 droid.stopLocating()
+
