@@ -1,14 +1,17 @@
-import android, time
-import datetime
+﻿import android
+import os, datetime, time
 
 from katalogi import kat
 from katalogi import podkat
 
 droid = android.Android()
 
-def drzwi(glowa, krotka):
-    droid.dialogCreateAlert(glowa)
-    droid.dialogSetItems(krotka)
+def mainMenu(topic, methodList):
+    """
+    print Android menu for choose options
+    """
+    droid.dialogCreateAlert(topic)
+    droid.dialogSetItems(methodList)
     droid.dialogShow()
     nika=droid.dialogGetResponse().result["item"]
     return nika
@@ -16,11 +19,14 @@ def drzwi(glowa, krotka):
 teraz = str(datetime.date.today())
 nameofile = droid.dialogGetInput('Filename', 'Enter txt filename:').result
 
-plikzap = (kat + podkat + nameofile + '.csv')
-plikpom = (kat + nameofile + '.txt')
+plikzap = '{}{}{}.csv'.format(kat, podkat, nameofile)
+plikpom = '{}{}.txt'.format(kat, nameofile)
 	
-wybor = drzwi('Write mode:', ["append", "overwrite"])
+# choose saving file method
+wybor = mainMenu('Write mode:', ["append", "overwrite"])
+
 if wybor == 1:
+    # overwrite files
     openzap = open(plikzap, 'w')
     openzap.write('')
     openzap.close()
@@ -29,7 +35,8 @@ if wybor == 1:
     openpom.write('')
     openpom.close()
 
-wybor2 = drzwi('Record mode:', ["walk", "run", "bike", "measure"])
+# choose type of activity (and time in sec. between saving waypoint: tryb)
+wybor2 = mainMenu('Record mode:', ["walk", "run", "bike", "measure"])
 if wybor2 == 0:
     tryb = 8
 elif wybor2 == 1:
@@ -39,12 +46,15 @@ elif wybor2 == 2:
 elif wybor2 == 3:
     tryb = 2
 
-wybor3 = drzwi('Full CSV data:', ["NO", "YES"])
+# choose if you want saving data in CSV file 
+wybor3 = mainMenu('Full CSV data:', ["NO", "YES"])
 
+# start main program: Locating
 droid.startLocating(2000, 3)
 
 lastOld = 0
 lostOld = 0
+zapis = 0
 
 while True:
     locat = droid.readLocation()
@@ -59,30 +69,35 @@ while True:
         else:
             last = str(lat)[:9]
             lost = str(lon)[:9]
+            sygnal = 'GPS'
 
             if (last != lastOld and lost != lostOld):
+                # new waypoint's coordinates are other than old coordinates
                 wysokost = str(wysoko)[:4]
                 znaczn = datetime.datetime.now()
                 znacznik = str(znaczn.strftime('%Y-%m-%d %H:%M:%S'))
-                sygnal = 'GPS'
+                zapis = 'S'
 
-                # writing text file with attributes:
-                # time,latitude,longitude,height(HAGL),source of signal\n
-                if wybor3 == 1:
-                    openzap = open(plikzap, 'a')
-                    openzap.write(znacznik + ',' + last + ',' + lost + ',' + sygnal + ',' + wysokost + ',\n')
-                    openzap.close()
-
+                # writing text file (WKT)
                 openpom = open(plikpom, 'a')
                 openpom.write(lost + ' ' + last + ',')
                 openpom.close()
 
+                if wybor3 == 1:
+                    # write CSV file with attributes:
+                    openzap = open(plikzap, 'a')
+                    openzap.write('{}, {}, {}, {}, {},\n'.format(znacznik, last, lost, sygnal, wysokost))
+                    openzap.close()
+
                 lastOld = last
                 lostOld = lost
+
+            else:
+                zapis = 'N'
                 
         finally:
-            szer = (last + ' N [' + sygnal + ']')
-            dlug = (lost + ' E | ' + wysokost + '  [mnpm]')
+            szer = '{} N [{}]'.format(last , sygnal)
+            dlug = '{} E | {} [mnpm] ({})'.format(lost, wysokost, zapis)
 
             print(szer)
             print(dlug)
@@ -93,4 +108,5 @@ while True:
     time.sleep(tryb)
     
 droid.stopLocating()
+
 
