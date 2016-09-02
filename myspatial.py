@@ -4,8 +4,8 @@ def kml_start(f, nazwakml):
     '''
     generate header of KMF file
     '''
-    f.write("<?xml version='1.0' encoding='UTF-8'?>\n")
-    f.write("<kml xmlns='http://earth.google.com/kml/2.1'>\n")
+    f.write('<?xml version="1.0" encoding="UTF-8"?>\n')
+    f.write('<kml xmlns="http://earth.google.com/kml/2.1">\n')
     f.write("<Document>\n")
     f.write("<name>" + nazwakml + "</name>\n")
     f.write("<visibility>1</visibility>\n")

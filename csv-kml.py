@@ -49,7 +49,7 @@ namef = namef.replace('.csv','')
 teraz = str(datetime.date.today())
 tytul1 = teraz.replace('201','1')
 
-prop = (tytul1.replace('-','') + '_' + namef + '.kml')
+prop = (namef + '.kml')
 
 pliktxt = open(plikod)
 data = csv.reader(pliktxt, delimiter = ',')

@@ -39,11 +39,11 @@ if wybor == 1:
 # choose type of activity (and time in sec. between saving waypoint: tryb)
 wybor2 = mainMenu('Record mode:', ["walk", "run", "bike", "measure"])
 if wybor2 == 0:
-    tryb = 8
-elif wybor2 == 1:
     tryb = 6
-elif wybor2 == 2:
+elif wybor2 == 1:
     tryb = 4
+elif wybor2 == 2:
+    tryb = 3
 elif wybor2 == 3:
     tryb = 2
 
@@ -87,7 +87,7 @@ while True:
                 if wybor3 == 1:
                     # write CSV file with attributes:
                     openzap = open(plikzap, 'a')
-                    openzap.write('{}, {}, {}, {}, {},\n'.format(znacznik, last, lost, sygnal, wysokost))
+                    openzap.write('{},{},{},{},{},\n'.format(znacznik, last, lost, sygnal, wysokost))
                     openzap.close()
 
                 lastOld = last
