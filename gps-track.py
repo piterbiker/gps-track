@@ -101,7 +101,7 @@ while True:
 
             print(szer)
             print(dlug)
-            print(40 * '-')
+            print(34 * '-')
     else:
         print ("Waiting for turn on GPS module...") 
     
