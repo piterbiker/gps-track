@@ -1,3 +1,4 @@
+import errno
 import android
 import os, datetime, time
 
@@ -6,6 +7,7 @@ from katalogi import podkat
 
 droid = android.Android()
 
+　
 def mainMenu(topic, methodList):
     """
     print Android menu for choose options
@@ -16,12 +18,23 @@ def mainMenu(topic, methodList):
     nika=droid.dialogGetResponse().result["item"]
     return nika
 
+　
+def saveData2File(savingFile, tekst):
+    try:
+        openpom = open(savingFile, 'a')
+    except (OSError, IOError) as e:
+        print(e, e.errno, errno.EINTR, sep='\n')
+    else:
+        with openpom:
+            openpom.write(tekst)
+
+　
 teraz = datetime.date.today()
 terazProp = str(teraz.strftime('%y%m%d_'))
 nameofile = droid.dialogGetInput('Filename', 'Enter txt filename:', terazProp).result
 
-plikzap = '{}{}{}.csv'.format(kat, podkat, nameofile)
 plikpom = '{}{}.txt'.format(kat, nameofile)
+plikzap = '{}{}{}.csv'.format(kat, podkat, nameofile)
 	
 # choose saving file method
 wybor = mainMenu('Write mode:', ["append", "overwrite"])
@@ -73,22 +86,20 @@ while True:
             sygnal = 'GPS'
 
             if (last != lastOld and lost != lostOld):
-                # new waypoint's coordinates are other than old coordinates
+                # new waypoint's coordinates are different than old coordinates
                 wysokost = str(wysoko)[:4]
                 znaczn = datetime.datetime.now()
                 znacznik = str(znaczn.strftime('%Y-%m-%d %H:%M:%S'))
                 zapis = 'S'
 
                 # writing text file (WKT)
-                openpom = open(plikpom, 'a')
-                openpom.write(lost + ' ' + last + ',')
-                openpom.close()
+                datapom = '{} {},'.format(lost, last)
+                saveData2File(plikpom, datapom)
 
                 if wybor3 == 1:
                     # write CSV file with attributes:
-                    openzap = open(plikzap, 'a')
-                    openzap.write('{},{},{},{},{},\n'.format(znacznik, last, lost, sygnal, wysokost))
-                    openzap.close()
+                    datazap = '{},{},{},{},{},\n'.format(znacznik, last, lost, sygnal, wysokost)
+                    saveData2File(plikzap, datazap)
 
                 lastOld = last
                 lostOld = lost
@@ -99,9 +110,8 @@ while True:
             szer = '{} N [{}]'.format(last , sygnal)
             dlug = '{} E | {} [mnpm] ({})'.format(lost, wysokost, zapis)
 
-            print(szer)
-            print(dlug)
-            print(34 * '-')
+            print(szer, dlug, 34 * '-', sep='\n')
+
     else:
         print ("Waiting for turn on GPS module...") 
     
