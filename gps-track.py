@@ -1,13 +1,15 @@
 import errno
 import android
-import os, datetime, time
+import os
+import datetime, time
+import pprint
 
 from katalogi import kat
 from katalogi import podkat
 
 droid = android.Android()
 
-　
+
 def mainMenu(topic, methodList):
     """
     print Android menu for choose options
@@ -18,7 +20,7 @@ def mainMenu(topic, methodList):
     nika=droid.dialogGetResponse().result["item"]
     return nika
 
-　
+
 def saveData2File(savingFile, tekst):
     try:
         openpom = open(savingFile, 'a')
@@ -28,11 +30,12 @@ def saveData2File(savingFile, tekst):
         with openpom:
             openpom.write(tekst)
 
-　
+
 teraz = datetime.date.today()
 terazProp = str(teraz.strftime('%y%m%d_'))
 nameofile = droid.dialogGetInput('Filename', 'Enter txt filename:', terazProp).result
 
+noYes = ["NO", "YES"]
 plikpom = '{}{}.txt'.format(kat, nameofile)
 plikzap = '{}{}{}.csv'.format(kat, podkat, nameofile)
 	
@@ -56,15 +59,20 @@ if wybor2 == 0:
 elif wybor2 == 1:
     tryb = 4
 elif wybor2 == 2:
-    tryb = 3
-elif wybor2 == 3:
     tryb = 2
+elif wybor2 == 3:
+    tryb = 1
 
 # choose if you want saving data in CSV file 
-wybor3 = mainMenu('Full CSV data:', ["NO", "YES"])
+wybor3 = mainMenu('Full CSV data:', noYes)
+
+if wybor2 in [0, 1]:
+    wybor4 = mainMenu('Geocoding:', noYes)
+else:
+    wybor4 = None
 
 # start main program: Locating
-droid.startLocating(2000, 3)
+droid.startLocating(1000, 2)
 
 lastOld = 0
 lostOld = 0
@@ -112,9 +120,20 @@ while True:
 
             print(szer, dlug, 34 * '-', sep='\n')
 
+            if wybor4:
+                if wybor4 == 1:
+                    # geocoding data
+                    try:
+                        adresy = droid.geocode(last, lost, 1).result
+                    except Exception as g:
+                        print('Geocoding error: {}'.format(g))
+                    else:
+                        pprint.pprint(adresy)
+ 
     else:
         print ("Waiting for turn on GPS module...") 
     
     time.sleep(tryb)
     
 droid.stopLocating()
+
