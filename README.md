@@ -18,3 +18,5 @@ The system consists of 4 files written in Python 3:
   * gps-track.py: file which You must run, to save your path to simple text file (CSV format) with geometry in base WKT format (vertices with latitude and longitute)
 
   * csv-kml.py: file which You can run, when you can transform before saved text file to XML format file: KML (Keyhole Markup Language) and KMZ file, that You can open in Google Earth application or other GIS apps.
+
+The application automatically removes duplicate coordinate points (don't save it), what is very helpfull for import data to Trailforks database or other restricted spatial database system.
