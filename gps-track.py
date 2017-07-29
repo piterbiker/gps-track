@@ -89,8 +89,8 @@ while True:
             print ('Failure: ', p)
             sygnal = 'NONE'
         else:
-            last = str(lat)[:9]
-            lost = str(lon)[:9]
+            last = str(lat)[:11]
+            lost = str(lon)[:11]
             sygnal = 'GPS'
 
             if (last != lastOld and lost != lostOld):
