@@ -1,5 +1,5 @@
 import os, csv
-import datetime
+import csv
 
 from katalogi import kat
 from katalogi import podkat
@@ -7,15 +7,10 @@ from katalogi import podkat
 from myspatial import gpx_start, gpx_koniec, gpx_trkpt
 
 def show_dir(path):
-    '''
-    show content of directory
-    '''
     nodes = []
     for file in os.listdir(path):
         if file.endswith(".csv"):
             nodes.append(file)
-
-    if path != path: nodes.insert(0, '..')
 
     return nodes
 
@@ -26,9 +21,6 @@ print(plikod)
 for input_file in plikod:
 
     namef = input_file.replace('.csv','')
-
-    teraz = str(datetime.date.today())
-    tytul1 = teraz.replace('201','1')
 
     pliktxt = open(os.path.join(folder, input_file))
     data = csv.reader(pliktxt, delimiter = ',')
