@@ -114,3 +114,42 @@ def plt_end(g):
     generte ending of PLT file
     '''
     g.close()
+
+
+def gpx_start(f, nazwakml):
+    '''
+    generate header of GPX file
+    '''
+    gpxIntro = """<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<gpx version="1.1" xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd">
+<trk>
+<name>
+{}
+</name>
+<trkseg>
+""".format(nazwakml)
+
+    f.write(gpxIntro)
+
+
+def gpx_koniec(f):
+    '''
+    generte ending of gpx file
+    '''     
+    gpxOutro = """
+</trkseg>
+</trk>
+</gpx>
+"""
+    f.write(gpxOutro)
+
+
+def gpx_trkpt(f, lat, lon, ele, tme):
+    trkpt = """<trkpt lat="{}" lon="{}">
+<ele>{}</ele>
+<time>{}</time>
+</trkpt>
+""".format(lat, lon, ele, tme.replace(' ', 'T'))
+
+    f.write(trkpt)
+
